@@ -15,7 +15,6 @@ The logic sequence for testing myst always be:
     4) land
 """
 d1.takeoff()
-d1.send_rc_control(0,0,0,0)
-sleep(2)
+sleep(5)
 d1.send_rc_control(0,0,0,0)
 d1.land()
