@@ -23,6 +23,9 @@ me = tello.Tello()
 me.connect()
 print(me.get_battery())
 
+# This is track the positions of the points
+points = []
+
 def getKeyboardInput():
     lr, fb, ud, yv = 0, 0, 0, 0
     speed = 50
@@ -72,12 +75,13 @@ def getKeyboardInput():
     return [lr, fb, ud, yv, x, y]
 
 def drawPoints(img, points):
-    cv2.circle(img, (points[0], points[1]), 5, (0, 0, 255), cv2.FILLED)
+    for point in points:
+        cv2.circle(img, point, 5, (0, 0, 255), cv2.FILLED)
 while True:
     vals = getKeyboardInput()
     me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
     img = np.zeros((1000, 1000, 3), np.uint8)
-    points = (vals[4], vals[5])
+    points.append((vals[4], vals[5]))
     drawPoints(img, points)
     cv2.imshow("Output", img)
     cv2.waitKey(1)
