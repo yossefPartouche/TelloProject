@@ -94,7 +94,10 @@ def drawPoints(img, points, yaw):
         # Calculate the endpoint of the arrow based on yaw
         end_point = (int(center[0] + length * math.cos(math.radians(yaw))),
                      int(center[1] + length * math.sin(math.radians(yaw))))
+
         cv2.arrowedLine(img, center, end_point, (255, 0, 0), 2, tipLength=0.3)  # Blue arrow for direction
+
+# Could be background image - to Confirm
 
 img = np.zeros((1000, 1000, 3), np.uint8)
 
@@ -104,6 +107,8 @@ while True:
     me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
 
     points.append((vals[4], vals[5]))
+
+    img = np.zeros((1000, 1000, 3), np.uint8)
 
     drawPoints(img, points, vals[6])
 
