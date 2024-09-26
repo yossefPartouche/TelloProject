@@ -10,7 +10,7 @@ print(me.get_battery())
 
 def getKeyboardInput():
     lr, fb, ud, yv = 0, 0, 0, 0
-    speed = 30
+    speed = 50
     if kp.getKey("RIGHT"): lr = speed
     elif kp.getKey("LEFT"): lr = -speed
 
@@ -29,7 +29,7 @@ def getKeyboardInput():
 
     return [lr, fb, ud, yv]
 
-me.takeoff()
+
 
 while True:
     vals = getKeyboardInput()
