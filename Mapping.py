@@ -16,7 +16,7 @@ aInterval = aSpeed * interval
 ################################################
 x, y = 500, 500
 a = 0
-yaw = 0
+yaw = 270
 
 kp.init()
 me = tello.Tello()
@@ -39,21 +39,21 @@ def getKeyboardInput():
     if kp.getKey("RIGHT"):
         lr = speed
         d = -dInterval
-        a = 180
+        a = 270
     elif kp.getKey("LEFT"):
         lr = -speed
         d = dInterval
-        a = -180
+        a = 270
 
     if kp.getKey("UP"):
         fb = speed
         d = dInterval
-        a = 270
+        a = 0
 
     elif kp.getKey("DOWN"):
         fb = -speed
         d = -dInterval
-        a = -90
+        a = 0
 
     if kp.getKey("w"):
         ud = speed
@@ -72,14 +72,14 @@ def getKeyboardInput():
         me.takeoff()
     if kp.getKey("q"):
         me.land()
-        sleep(3)
+        sleep(1)
 
     sleep(interval)
     a += yaw
     x += int(d * math.cos(math.radians(a)))
     y += int(d * math.sin(math.radians(a)))
 
-    return [lr, fb, ud, yv, x, y]
+    return [lr, fb, ud, yv, x, y, yaw]
 
 
 def drawPoints(img, points, yaw):
@@ -87,6 +87,7 @@ def drawPoints(img, points, yaw):
     for point in points:
         cv2.circle(img, point, 5, (0, 0, 255), cv2.FILLED)
     # Draw an arrow representing the drone's heading (yaw)
+
     if points:
         center = points[-1]
         length = 30
@@ -94,6 +95,7 @@ def drawPoints(img, points, yaw):
         end_point = (int(center[0] + length * math.cos(math.radians(yaw))),
                      int(center[1] + length * math.sin(math.radians(yaw))))
         cv2.arrowedLine(img, center, end_point, (255, 0, 0), 2, tipLength=0.3)  # Blue arrow for direction
+
 img = np.zeros((1000, 1000, 3), np.uint8)
 
 while True:
@@ -103,7 +105,7 @@ while True:
 
     points.append((vals[4], vals[5]))
 
-    drawPoints(img, points, vals[3])
+    drawPoints(img, points, vals[6])
 
     cv2.imshow("Output", img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
