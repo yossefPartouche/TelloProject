@@ -113,7 +113,7 @@ while True:
     drawPoints(img, points, vals[6])
 
     cv2.imshow("Output", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('e'):
         break
 cv2.destroyAllWindows()
 
