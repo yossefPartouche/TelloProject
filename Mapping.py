@@ -16,7 +16,8 @@ aInterval = aSpeed * interval
 ################################################
 x, y = 500, 500
 a = 0
-yaw = 270
+yaw = 270 # This is the initial angular direction
+z = 0 # This represents the height
 
 kp.init()
 me = tello.Tello()
@@ -30,7 +31,7 @@ points = [(0, 0), (0, 0)]
 def getKeyboardInput():
     lr, fb, ud, yv = 0, 0, 0, 0
 
-    speed = 15
+    speed = 20
     aSpeed = 50
 
     global x, y, yaw, a
@@ -82,14 +83,21 @@ def getKeyboardInput():
     return [lr, fb, ud, yv, x, y, yaw]
 
 
-def drawPoints(img, points, yaw):
-    # Draw drone's position as a circle
+def drawPoints(img, points):
     for point in points:
-        cv2.circle(img, point, 5, (0, 0, 255), cv2.FILLED)
+        x, y = point[0], point[1]
+
+        #  Radius is inversely proportional to the height
+        radius = 5
+        color = (0,0, 255)
+
+        cv2.circle(img, (x, y), radius, color, cv2.FILLED)
     # Draw an arrow representing the drone's heading (yaw)
 
     if points:
-        center = points[-1]
+        center = points[-1][:2]
+        yaw = points[-1][2]
+
         length = 30
         # Calculate the endpoint of the arrow based on yaw
         end_point = (int(center[0] + length * math.cos(math.radians(yaw))),
@@ -97,7 +105,8 @@ def drawPoints(img, points, yaw):
 
         cv2.arrowedLine(img, center, end_point, (255, 0, 0), 2, tipLength=0.3)  # Blue arrow for direction
 
-# Could be background image - to Confirm
+#  background image
+
 
 img = np.zeros((1000, 1000, 3), np.uint8)
 
@@ -106,11 +115,11 @@ while True:
     vals = getKeyboardInput()
     me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
 
-    points.append((vals[4], vals[5]))
+    points.append((vals[4], vals[5], vals[6]))
 
     img = np.zeros((1000, 1000, 3), np.uint8)
 
-    drawPoints(img, points, vals[6])
+    drawPoints(img, points)
 
     cv2.imshow("Output", img)
     if cv2.waitKey(1) & 0xFF == ord('e'):
